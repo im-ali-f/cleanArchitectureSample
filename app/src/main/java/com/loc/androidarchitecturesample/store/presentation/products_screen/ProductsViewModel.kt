@@ -1,10 +1,9 @@
 package com.loc.androidarchitecturesample.store.presentation.products_screen
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.loc.androidarchitecturesample.store.domain.repository.ProductsRepository
-import com.loc.androidarchitecturesample.store.presentation.util.sendEvent
-import com.loc.androidarchitecturesample.util.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,19 +26,23 @@ class ProductsViewModel @Inject constructor(
 
     fun getProducts() {
         viewModelScope.launch {
+            Log.d("TAG", "getProducts: started")
             _state.update { it.copy(isLoading = true) }
             productsRepository.getProducts()
                 .onRight { products ->
+
+
+                    Log.d("TAG", "getProducts: pVM called")
                     _state.update {
-                        it.copy(products = products)
+                        it.copy(products = products.body()!!)
                     }
                 }.onLeft { error ->
+                    Log.d("TAG", "getProducts: pVM called but failed")
                     _state.update {
                         it.copy(
                             error = error.error.message
                         )
                     }
-                    sendEvent(Event.Toast(error.error.message))
                 }
             _state.update { it.copy(isLoading = false) }
         }

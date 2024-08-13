@@ -15,28 +15,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import com.loc.androidarchitecturesample.store.presentation.products_screen.ProductsScreen
 import com.loc.androidarchitecturesample.ui.theme.AndroidArchitectureSampleTheme
-import com.loc.androidarchitecturesample.util.Event
-import com.loc.androidarchitecturesample.util.EventBus
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContent {
-            val lifecycleOwner = LocalLifecycleOwner.current.lifecycle
-            LaunchedEffect(key1 = lifecycleOwner) {
-                lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    EventBus.events.collect { event ->
-                        when (event) {
-                            is Event.Toast -> {
-                                Toast.makeText(this@MainActivity, event.message, Toast.LENGTH_SHORT)
-                                    .show()
-                            }
-                        }
-                    }
-                }
-            }
             AndroidArchitectureSampleTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
